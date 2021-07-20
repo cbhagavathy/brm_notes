@@ -1,0 +1,47 @@
+There are two undocumented (or documented depending on the release) flags, that can be set in the cm pin.conf file (a documentation upgrade will be delivered, to include this information).
+
+In order to activate cm timing traces, please do the following:
+
+1) Set cm loglevel to 1 
+
+- cm cm_loglevel 1
+
+2) Set the entries like below in cm/pin.conf (depending on the opcode trail length, please modify the max_pcm_op_call_stack_entries value accordingly):
+
+
+#========================================================================
+# max_pcm_op_call_stack_entries
+#
+# This is the number of entries allocated for the PCM_OP_CALL_STACK
+# There are 2 entries per opcode called - one for enter, one for the exit.
+# The PCM_OP_CALL_STACK is only printed when an opcode from a NAP
+# completes and the enable_pcm_op_call_stack flag is set to 1
+#
+#========================================================================
+- cm max_pcm_op_call_stack_entries 5120
+
+#========================================================================
+# enable_pcm_op_call_stack
+#
+# This determines if the PCM_OP_CALL_STACK is printed in the cm.pinlog
+# after each opcode from a NAP is completed.
+#
+#========================================================================
+- cm enable_pcm_op_call_stack 1
+By doing so (after a cm restart), each op-code call will be traced in the cm.pinlog like in the following example:
+
+D Sat Feb 02 00:30:00 2008 <HOSTNAME> cm:17755 cm_child.c(105):999 1:<HOSTNAME>:loadpricelist:0:main:662:1233 224803:0
+cm_pcm_op_call_stack
+Seconds Type Opcode (flags, notes)
+0.000000000 Enter PCM_OP_PRICE_GET_PRICE_LIST (0x0)
+0.055660868 .Enter PCM_OP_SEARCH (0x10)
+0.065100604 .Exit PCM_OP_SEARCH (0x80000010) - from DM 0.0.0.1
+[...]
+0.543114273 .Enter PCM_OP_SEARCH (0x0)
+0.554521861 .Exit PCM_OP_SEARCH (0x80000000) - from DM 0.0.0.1
+0.566864016 Exit PCM_OP_PRICE_GET_PRICE_LIST (0x0)
+
+In this example, the trace reports that a call to PCM_OP_PRICE_GET_PRICE_LIST took 0.566864016 seconds totally.
+
+In the same trace the time splitting for each nested opcode call is also reported, making it relatively easy for example to narrow down the scope of a performance analysis and optimization only to the opcode calls that took the longest time
+
