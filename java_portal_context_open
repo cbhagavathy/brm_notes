@@ -1,0 +1,9 @@
+ 0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/pcm_client 0 0
+ 0 PIN_FLD_TYPE           ENUM [0] 1
+ 0 PIN_FLD_LOGIN          STR  [0] "root.0.0.0.1"
+ 0 PIN_FLD_PASSWD_CLEAR   STR  [0] "password"
+ 0 PIN_FLD_TIMEOUT_IN_MS   INT  [0] 30000
+ 0 PIN_FLD_CM_PTRS       ARRAY [0] allocated 1, used 1
+ 1      PIN_FLD_CM_PTR         STR [0] "ip <<I>server_hostname</I>> 11960"
+
+Call portalContext open with a single argument with the above prepared flist.
